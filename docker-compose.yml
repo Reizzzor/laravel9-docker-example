@@ -1,0 +1,38 @@
+version: '3.3'
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/Nginx.Dockerfile
+    ports:
+      - 8000:80
+    links:
+      - fpm
+    volumes:
+      - ./:/var/www/laravel9
+
+  fpm:
+    build:
+       context: .
+       dockerfile: ./docker/Fpm.Dockerfile
+    volumes:
+      - ./:/var/www/laravel9
+    depends_on:
+      - mysql
+      - redis
+    environment:
+      DB_CONNECTION: mysql
+      DB_HOST: mysql
+      DB_PORT: 3306
+      XDEBUG_CONFIG: remote_host=${DOCKER_HOST_IP}
+      PHP_IDE_CONFIG: serverName=${DOCKER_PHP_SERVER}
+
+  mysql:
+    image: mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=laravel9_test
+
+  redis:
+   image: redis:3.2.6

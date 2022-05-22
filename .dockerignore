@@ -1,0 +1,8 @@
+.env
+.git
+bootstrap/cache/*
+storage/debugbar/*
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
+vendor/
